@@ -40,7 +40,12 @@ export function insertTaskInDb(title, rosterId, successCb, errorCb=null) {
     })
     .then(function(docRef) {
         if (successCb) {
-            successCb({id: docRef.id, ...docRef.data()});
+            successCb({
+                id: docRef.id,
+                title,
+                rosterId,
+                assignees: []
+            });
         }
     })
     .catch(function(error) {
@@ -58,7 +63,12 @@ export function retrieveTasksFromDb(rosterId, successCb=null, errorCb=null) {
         .then(querySnapshot => {
             var results = [];
             querySnapshot.forEach(docRef => {
-                results.push({id: docRef.id, ...docRef.data()});
+                const data = docRef.data();
+                results.push({
+                    id: docRef.id, 
+                    ...data,
+                    assignees: data.assignees ? data.assignees : []
+                });
             });
             successCb(results);
         })
@@ -77,7 +87,11 @@ export function insertMemberInDb(name, rosterId, successCb, errorCb=null) {
     })
     .then(function(docRef) {
         if (successCb) {
-            successCb({id: docRef.id, ...docRef.data()});
+            successCb({
+                id: docRef.id,
+                name, 
+                rosterId
+            });
         }
     })
     .catch(function(error) {

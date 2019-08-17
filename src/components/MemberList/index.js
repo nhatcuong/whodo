@@ -1,28 +1,26 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import { retrieveForRoster } from '../../domain/member';
+import * as actions from 'redux/actions';
 
 const INITIAL_STATE = {
     members: []
 }
 
-export default class MemberList extends Component {
+class MemberList extends Component {
     constructor(props) {
         super(props);
         this.state = {...INITIAL_STATE};
     }
 
     componentWillMount() {
-        retrieveForRoster(
-            this.props.rosterId,
-            results => {
-                this.setState({members: results})
-            }
+        this.props.dispatch(
+            actions.fetchMembers(this.props.rosterId)
         );
     }
 
     render() {
-        const members = this.state.members.map(
+        const members = this.props.members.map(
             member => {
                 return (
                     <div key={ member.id }>{ member.name }</div>
@@ -38,3 +36,9 @@ export default class MemberList extends Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    members: state.members
+});
+
+export default connect(mapStateToProps)(MemberList);

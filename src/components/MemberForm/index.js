@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import * as Task from '../../domain/member'
+import { connect } from 'react-redux';
+
+import * as actions from 'redux/actions';
 
 const INITIAL_STATE = {
     name: ''
 };
 
-export default class MemberForm extends Component {
+class MemberForm extends Component {
     constructor(props) {
         super(props);
         this.state = { ...INITIAL_STATE };
@@ -17,7 +19,10 @@ export default class MemberForm extends Component {
 
     onSubmit = event => {
         const { name } = this.state;
-        Task.create(name, this.props.rosterId);
+        this.props.dispatch(actions.publishMember({
+            rosterId: this.props.rosterId,
+            name
+        }));
         this.setState({ ...INITIAL_STATE });
         event.preventDefault();
     }
@@ -38,3 +43,5 @@ export default class MemberForm extends Component {
         )
     }
 }
+
+export default connect()(MemberForm);

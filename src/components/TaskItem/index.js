@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 import * as Task from 'domain/task'
 
 
-export default class TaskItem extends Component {
+class TaskItem extends Component {
     onClickMemberButton = event => {
         const memberId = event.target.getAttribute('data-member');
         const member = this.props.availableMembers.find(
@@ -41,3 +43,9 @@ export default class TaskItem extends Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    availableMembers: state.members
+});
+
+export default connect(mapStateToProps)(TaskItem);

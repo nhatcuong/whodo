@@ -1,27 +1,23 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 
-import { retrieveTasks } from 'domain/task';
+// import { retrieveTasks } from 'domain/task';
+import * as actions from 'redux/actions';
 import * as Member from 'domain/member';
 import TaskItem from 'components/TaskItem';
 
 const INITIAL_STATE = {
-    tasks: [],
     availableMembers: []
 }
 
-export default class TaskList extends Component {
+class TaskList extends Component {
     constructor(props) {
         super(props);
         this.state = {...INITIAL_STATE};
     }
 
     componentWillMount() {
-        retrieveTasks(
-            this.props.rosterId,
-            results => {
-                this.setState({tasks: results});
-            }
-        );
+        this.props.dispatch(actions.fetchTask(this.props.rosterId));
         Member.retrieveForRoster(
             this.props.rosterId,
             results => {
@@ -31,13 +27,12 @@ export default class TaskList extends Component {
     }
 
     render() {
-        const tasks = this.state.tasks.map(
+        const tasks = this.props.tasks.map(
             task => {
                 return (
                     <TaskItem
                         key={task.id}
-                        task={task} 
-                        availableMembers={this.state.availableMembers}>
+                        task={task}>
                     </TaskItem>
                 );
             }
@@ -51,3 +46,9 @@ export default class TaskList extends Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    tasks: state.tasks
+});
+
+export default connect(mapStateToProps)(TaskList);
