@@ -1,136 +1,83 @@
 import Firebase, { FieldValue } from './firebase';
 
-export function insertRosterInDb(title, successCb=null, errorCb=null) {
+export async function insertRosterInDb(title) {
     const firebase = new Firebase();
-    firebase.db.collection("rosters").add({
+    const docRef = await firebase.db.collection("rosters").add({
         title: title,
-    })
-    .then(function(docRef){
-        if (successCb) successCb(docRef.id);
-    })
-    .catch(function(error) {
-        console.error("Error adding document: ", error);
-        if (errorCb) errorCb(error);
     });
+    return docRef.id;
 }
 
-export function retrieveRostersFromDb(successCb, errorCb=null) {
+export async function retrieveRostersFromDb() {
     const firebase = new Firebase();
-    firebase.db.collection("rosters")
-        .get()
-        .then(querySnapshot => {
-            var results = [];
-            querySnapshot.forEach(docRef => {
-                results.push({id: docRef.id, ...docRef.data()});
-            });
-            successCb(results);
-        })
-        .catch(error => {
-            if (errorCb) {
-                errorCb(error);
-            }
-        });
+    const querySnapshot = await firebase.db.collection("rosters").get();
+    var results = [];
+    querySnapshot.forEach(docRef => {
+        results.push({id: docRef.id, ...docRef.data()});
+    });
+    return results;
 }
 
-export function insertTaskInDb(title, rosterId, successCb, errorCb=null) {
+export async function insertTaskInDb(title, rosterId) {
     const firebase = new Firebase();
-    firebase.db.collection("tasks").add({
+    const docRef = await firebase.db.collection("tasks").add({
         title: title,
         rosterId: rosterId
-    })
-    .then(function(docRef) {
-        if (successCb) {
-            successCb({
-                id: docRef.id,
-                title,
-                rosterId,
-                assignees: []
-            });
-        }
-    })
-    .catch(function(error) {
-        console.error("Error adding document: ", error);
-        if (errorCb) {
-            errorCb(error);
-        }
     });
+    return {
+        id: docRef.id,
+        title,
+        rosterId,
+        assignees: []
+    };
 }
 
-export function retrieveTasksFromDb(rosterId, successCb=null, errorCb=null) {
+export async function retrieveTasksFromDb(rosterId) {
     const firebase = new Firebase();
     const query = firebase.db.collection("tasks").where('rosterId', '==', rosterId);
-    query.get()
-        .then(querySnapshot => {
-            var results = [];
-            querySnapshot.forEach(docRef => {
-                const data = docRef.data();
-                results.push({
-                    id: docRef.id, 
-                    ...data,
-                    assignees: data.assignees ? data.assignees : []
-                });
-            });
-            successCb(results);
-        })
-        .catch(error => {
-            if (errorCb) {
-                errorCb(error);
-            }
+    const querySnapshot = await query.get();
+    var results = [];
+    querySnapshot.forEach(docRef => {
+        const data = docRef.data();
+        results.push({
+            id: docRef.id, 
+            ...data,
+            assignees: data.assignees ? data.assignees : []
         });
+    });
+    return results;
 }
 
-export function insertMemberInDb(name, rosterId, successCb, errorCb=null) {
+export async function insertMemberInDb(name, rosterId) {
     const firebase = new Firebase();
-    firebase.db.collection("members").add({
+    const docRef = await firebase.db.collection("members").add({
         name: name,
         rosterId: rosterId
-    })
-    .then(function(docRef) {
-        if (successCb) {
-            successCb({
-                id: docRef.id,
-                name, 
-                rosterId
-            });
-        }
-    })
-    .catch(function(error) {
-        console.error("Error adding document: ", error);
     });
+    return {
+        id: docRef.id,
+        name,
+        rosterId
+    };
 }
 
-export function retrieveMembersForRosterFromDb(rosterId, successCb=null, errorCb=null) {
+export async function retrieveMembersForRosterFromDb(rosterId) {
     const firebase = new Firebase();
     const query = firebase.db.collection("members").where('rosterId', '==', rosterId);
-    query.get()
-        .then(querySnapshot => {
-            var results = [];
-            querySnapshot.forEach(docRef => {
-                results.push({id: docRef.id, ...docRef.data()});
-            });
-            successCb(results);
-        })
-        .catch(error => {
-            if (errorCb) {
-                errorCb(error);
-            }
+    const querySnapshot = await query.get();
+    var results = [];
+    querySnapshot.forEach(docRef => {
+        results.push({
+           id: docRef.id,
+           ...docRef.data() 
         });
+    });
+    return results;
 }
 
-export function assignMemberToTaskInDb(task, member, successCb=null, errorCb=null) {
+export async function assignMemberToTaskInDb(task, member) {
     const firebase = new Firebase();
-    firebase.db.collection('tasks').doc(task.id).update({
+    return await firebase.db.collection('tasks').doc(task.id).update({
         assignees: FieldValue.arrayUnion(member)
     })
-        .then(function() {
-            if (successCb) {
-                successCb();
-            }
-        })
-        .catch(function(error) {
-            if (errorCb) {
-                errorCb(error);
-            }
-        });
-
 }

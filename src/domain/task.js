@@ -1,18 +1,21 @@
 import * as db from '../db';
 
 export function create(title, rosterId, successCb=null, errorCb=null) {
-    db.insertTaskInDb(title, rosterId, successCb, errorCb);
+    db.insertTaskInDb(title, rosterId)
+        .then(successCb)
+        .catch(errorCb);
 }
 
 export function retrieveTasks(rosterId, successCb, errorCb=null) {
-    db.retrieveTasksFromDb(rosterId, successCb, errorCb);
+    db.retrieveTasksFromDb(rosterId)
+        .then(successCb)
+        .catch(errorCb);
 }
 
 export function assignMemberToTask(task, member, successCb=null, errorCb=null) {
-    if (task.assignees === undefined) {
-        task.assignees = [];
-    }
-    db.assignMemberToTaskInDb(task, member, successCb, errorCb);
+    db.assignMemberToTaskInDb(task, member)
+        .then(successCb)
+        .catch(errorCb);
 }
 
 export function assignableMembersToTask(task, membersInRoster) {
