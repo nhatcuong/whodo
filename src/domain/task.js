@@ -12,8 +12,7 @@ export function assignMemberToTask(task, member, successCb=null, errorCb=null) {
     if (task.assignees === undefined) {
         task.assignees = [];
     }
-    task.assignees.push(member);
-    db.assignMemberToTaskInDb(task, member);
+    db.assignMemberToTaskInDb(task, member, successCb, errorCb);
 }
 
 export function assignableMembersToTask(task, membersInRoster) {

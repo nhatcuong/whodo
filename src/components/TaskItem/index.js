@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import * as Task from 'domain/task'
+import * as Task from 'domain/task';
+import * as actions from 'redux/actions';
 
 
 class TaskItem extends Component {
@@ -9,9 +10,14 @@ class TaskItem extends Component {
         const memberId = event.target.getAttribute('data-member');
         const member = this.props.availableMembers.find(
             m => m.id === memberId
-        )
+        );
         if (member) {
-            Task.assignMemberToTask(this.props.task, member);
+            this.props.dispatch(
+                actions.assignMemberToTaskRemote(
+                    this.props.task,
+                    member
+                )
+            );
         }
     }
 

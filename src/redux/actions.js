@@ -5,7 +5,8 @@ export const actionType = {
     ADD_TASK: 'ADD_TASK',
     UPDATE_ALL_TASKS: 'UPDATE_ALL_TASKS',
     ADD_MEMBER: 'ADD_MEMBER',
-    UPDATE_ALL_MEMBERS: 'UPDATE_ALL_MEMBERS'
+    UPDATE_ALL_MEMBERS: 'UPDATE_ALL_MEMBERS',
+    ASSIGN_MEMBER_TO_TASK: 'ASSIGN_MEMBER_TO_TASK'
 };
 
 export const addTask = task => ({
@@ -60,4 +61,20 @@ export const fetchMembers = rosterId => dispatch => {
             dispatch(updateAllMembers(members));
         }    
     )
+}
+
+export const assignMemberToTask = (task, member) => ({
+    type: actionType.ASSIGN_MEMBER_TO_TASK,
+    member,
+    task
+});
+
+export const assignMemberToTaskRemote = (task, member) => dispatch => {
+    Task.assignMemberToTask(
+        task, 
+        member, 
+        () => {
+            dispatch(assignMemberToTask(task, member));
+        }
+    );
 }
