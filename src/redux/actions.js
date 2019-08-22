@@ -1,12 +1,14 @@
 import * as Task from 'domain/task';
 import * as Member from 'domain/member';
+import * as Roster from 'domain/roster';
 
 export const actionType = {
     ADD_TASK: 'ADD_TASK',
     UPDATE_ALL_TASKS: 'UPDATE_ALL_TASKS',
     ADD_MEMBER: 'ADD_MEMBER',
     UPDATE_ALL_MEMBERS: 'UPDATE_ALL_MEMBERS',
-    ASSIGN_MEMBER_TO_TASK: 'ASSIGN_MEMBER_TO_TASK'
+    ASSIGN_MEMBER_TO_TASK: 'ASSIGN_MEMBER_TO_TASK',
+    SET_CURRENT_ROSTER: 'SET_CURRENT_ROSTER'
 };
 
 export const addTask = task => ({
@@ -28,15 +30,6 @@ export const publishTask = task => dispatch => {
     );
 }
 
-export const fetchTask = rosterId => dispatch => {
-    Task.retrieveTasks(
-        rosterId,
-        (tasks) => {
-            dispatch(updateAllTasks(tasks));
-        }
-    );
-}
-
 export const addMember = member => ({
     type: actionType.ADD_MEMBER,
     member
@@ -47,6 +40,11 @@ export const updateAllMembers = members => ({
     members
 });
 
+export const setCurrentRoster = roster => ({
+    type: actionType.SET_CURRENT_ROSTER,
+    roster
+});
+
 export const publishMember = member => dispatch => {
     Member.create(member.name, member.rosterId,
         (newMember) => {
@@ -55,12 +53,29 @@ export const publishMember = member => dispatch => {
     )
 }
 
-export const fetchMembers = rosterId => dispatch => {
-    Member.retrieveForRoster(rosterId,
+export const fetchCurrentRoster = rosterId => (dispatch, getState) => {
+    const currentRoster = getState().currentRoster;
+    if (currentRoster && currentRoster.id === rosterId) {
+        return;
+    }
+    Roster.getRoster(
+        rosterId,
+        (roster) => {
+            dispatch(setCurrentRoster(roster));
+        }
+    )
+    Member.retrieveForRoster(
+        rosterId,
         (members) => {
             dispatch(updateAllMembers(members));
         }    
-    )
+    );
+    Task.retrieveAliveTasks(
+        rosterId,
+        (tasks) => {
+            dispatch(updateAllTasks(tasks));
+        }
+    );
 }
 
 export const assignMemberToTask = (task, member) => ({

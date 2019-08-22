@@ -1,6 +1,15 @@
 import { combineReducers } from 'redux'
 import * as actions from './actions';
 
+function currentRoster(state={}, action) {
+    switch (action.type) {
+        case actions.actionType.SET_CURRENT_ROSTER:
+            return action.roster;
+        default:
+            return state;
+    }
+}
+
 function tasks(state=[], action) {
     switch (action.type) {
         case actions.actionType.ADD_TASK:
@@ -19,7 +28,6 @@ function tasks(state=[], action) {
                 return t;
             });
             return tasks;
-            // return state;
         default:
             return state;
     }
@@ -39,7 +47,7 @@ function members(state=[], action) {
     }
 }
 
-const rootReducer = combineReducers({tasks, members});
+const rootReducer = combineReducers({currentRoster, tasks, members});
 
 export default rootReducer;
 

@@ -18,6 +18,15 @@ export async function retrieveRostersFromDb() {
     return results;
 }
 
+export async function getRosterFromDb(rosterId) {
+    const firebase = new Firebase();
+    const doc = await firebase.db.collection("rosters").doc(rosterId).get();
+    return {
+        id: doc.id,
+        ...doc.data()
+    }
+}
+
 export async function insertTaskInDb(title, rosterId) {
     const firebase = new Firebase();
     const docRef = await firebase.db.collection("tasks").add({
@@ -32,9 +41,10 @@ export async function insertTaskInDb(title, rosterId) {
     };
 }
 
-export async function retrieveTasksFromDb(rosterId) {
+export async function retrieveAliveTasksFromDb(rosterId) {
     const firebase = new Firebase();
-    const query = firebase.db.collection("tasks").where('rosterId', '==', rosterId);
+    const query = firebase.db.collection("tasks")
+        .where('rosterId', '==', rosterId);
     const querySnapshot = await query.get();
     var results = [];
     querySnapshot.forEach(docRef => {

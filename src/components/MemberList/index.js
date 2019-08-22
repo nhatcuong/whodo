@@ -13,12 +13,6 @@ class MemberList extends Component {
         this.state = {...INITIAL_STATE};
     }
 
-    componentWillMount() {
-        this.props.dispatch(
-            actions.fetchMembers(this.props.rosterId)
-        );
-    }
-
     render() {
         const members = this.props.members.map(
             member => {

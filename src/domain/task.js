@@ -6,8 +6,8 @@ export function create(title, rosterId, successCb=null, errorCb=null) {
         .catch(errorCb);
 }
 
-export function retrieveTasks(rosterId, successCb, errorCb=null) {
-    db.retrieveTasksFromDb(rosterId)
+export function retrieveAliveTasks(rosterId, successCb, errorCb=null) {
+    db.retrieveAliveTasksFromDb(rosterId)
         .then(successCb)
         .catch(errorCb);
 }
