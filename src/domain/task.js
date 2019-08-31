@@ -34,3 +34,16 @@ export function assignableMembersToTask(task, membersInRoster) {
     return results;
 }
 
+/* As we deal with reactive views, this function must
+return a new list. */
+export function assignMemberToTaskInTaskList(task, taskList, member) {
+    var newTaskList = taskList.map((t) => {
+        var newT = {...t};
+        if (newT.id === task.id) {
+            newT.assignees.push(member);
+        }
+        return newT;
+    });
+    return newTaskList;
+}
+

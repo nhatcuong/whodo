@@ -32,5 +32,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint-plugin-react-hooks": "^2.0.1",
+    "jest": "^24.9.0",
+    "typescript": "^3.6.2"
   }
 }

@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import * as actions from './actions';
+import * as Task from 'domain/task';
 
 function currentRoster(state={}, action) {
     switch (action.type) {
@@ -20,14 +21,11 @@ function tasks(state=[], action) {
         case actions.actionType.UPDATE_ALL_TASKS:
             return action.tasks;
         case actions.actionType.ASSIGN_MEMBER_TO_TASK:
-            var tasks = state.map((task) => {
-                var t = {...task};
-                if (t.id === action.task.id) {
-                    t.assignees.push(action.member);
-                }
-                return t;
-            });
-            return tasks;
+            return Task.assignMemberToTaskInTaskList(
+                action.task,
+                state,
+                action.member
+            );
         default:
             return state;
     }
