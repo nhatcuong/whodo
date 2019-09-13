@@ -26,6 +26,12 @@ function tasks(state=[], action) {
                 state,
                 action.member
             );
+        case actions.actionType.UNASSIGN_MEMBER_TO_TASK:
+            return Task.unassignMemberToTaskInTaskList(
+                action.task,
+                state,
+                action.member
+            );
         default:
             return state;
     }

@@ -18,6 +18,12 @@ export function assignMemberToTask(task, member, successCb=null, errorCb=null) {
         .catch(errorCb);
 }
 
+export function unassignMemberToTask(task, member, successCb=null, errorCb=null) {
+    db.unassignMemberToTaskInDb(task, member)
+        .then(successCb)
+        .catch(errorCb);
+}
+
 export function assignableMembersToTask(task, membersInRoster) {
     var assigneesId = [];
     if (task.assignees) {
@@ -46,6 +52,20 @@ export function assignMemberToTaskInTaskList(task, taskList, member) {
     });
     return newTaskList;
 }
+
+export function unassignMemberToTaskInTaskList(task, taskList, member) {
+    var newTaskList = taskList.map((t) => {
+        var newT = {...t};
+        if (newT.id === task.id) {
+            newT.assignees = newT.assignees.filter(
+                (m) => m.id !== member.id
+            );
+        }
+        return newT;
+    });
+    return newTaskList;
+}
+
 
 export function filterTasksByAssigneeId(assigneeId, tasks) {
     if (assigneeId == null) {

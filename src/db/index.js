@@ -91,3 +91,10 @@ export async function assignMemberToTaskInDb(task, member) {
         assignees: FieldValue.arrayUnion(member)
     })
 }
+
+export async function unassignMemberToTaskInDb(task, member) {
+    const firebase = new Firebase();
+    return await firebase.db.collection('tasks').doc(task.id).update({
+        assignees: FieldValue.arrayRemove(member)
+    })
+}

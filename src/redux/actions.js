@@ -8,6 +8,7 @@ export const actionType = {
     ADD_MEMBER: 'ADD_MEMBER',
     UPDATE_ALL_MEMBERS: 'UPDATE_ALL_MEMBERS',
     ASSIGN_MEMBER_TO_TASK: 'ASSIGN_MEMBER_TO_TASK',
+    UNASSIGN_MEMBER_TO_TASK: 'UNASSIGN_MEMBER_TO_TASK',
     SET_CURRENT_ROSTER: 'SET_CURRENT_ROSTER',
     FILTER_BY_ASSIGNEE_ID: 'FILTER_BY_ASSIGNEE_ID'
 };
@@ -85,6 +86,12 @@ export const assignMemberToTask = (task, member) => ({
     task
 });
 
+export const unassignMemberToTask = (task, member) => ({
+    type: actionType.UNASSIGN_MEMBER_TO_TASK,
+    member,
+    task
+});
+
 export const assignMemberToTaskRemote = (task, member) => dispatch => {
     Task.assignMemberToTask(
         task, 
@@ -93,6 +100,16 @@ export const assignMemberToTaskRemote = (task, member) => dispatch => {
             dispatch(assignMemberToTask(task, member));
         }
     );
+}
+
+export const unassignMemberToTaskRemote = (task, member) => dispatch => {
+    Task.unassignMemberToTask(
+        task,
+        member,
+        () => {
+            dispatch(unassignMemberToTask(task, member));
+        }
+    )
 }
 
 export const filterByAssigneeId = (memberId) => ({
