@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
+import * as Task from 'domain/task';
 import TaskItem from 'components/TaskItem';
 
 const INITIAL_STATE = {
@@ -14,7 +15,11 @@ class TaskList extends Component {
     }
 
     render() {
-        const tasks = this.props.tasks.map(
+        const tasksToShow = Task.filterTasksByAssigneeId(
+            this.props.filterByAssigneeId, 
+            this.props.tasks
+        );
+        const tasks = tasksToShow.map(
             task => {
                 return (
                     <TaskItem
@@ -35,7 +40,8 @@ class TaskList extends Component {
 }
 
 const mapStateToProps = state => ({
-    tasks: state.tasks
+    tasks: state.tasks,
+    filterByAssigneeId: state.filterByAssigneeId
 });
 
 export default connect(mapStateToProps)(TaskList);

@@ -21,7 +21,7 @@ class TaskForm extends Component {
         const { title } = this.state;
         this.props.dispatch(actions.publishTask({
             title: title,
-            rosterId: this.props.rosterId
+            rosterId: this.props.roster.id
         }));
         this.setState({ ...INITIAL_STATE });
         event.preventDefault();
@@ -44,4 +44,8 @@ class TaskForm extends Component {
     }
 }
 
-export default connect()(TaskForm);
+const mapStateToProps = state => ({
+    roster: state.currentRoster
+});
+
+export default connect(mapStateToProps)(TaskForm);

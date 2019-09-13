@@ -8,7 +8,8 @@ export const actionType = {
     ADD_MEMBER: 'ADD_MEMBER',
     UPDATE_ALL_MEMBERS: 'UPDATE_ALL_MEMBERS',
     ASSIGN_MEMBER_TO_TASK: 'ASSIGN_MEMBER_TO_TASK',
-    SET_CURRENT_ROSTER: 'SET_CURRENT_ROSTER'
+    SET_CURRENT_ROSTER: 'SET_CURRENT_ROSTER',
+    FILTER_BY_ASSIGNEE_ID: 'FILTER_BY_ASSIGNEE_ID'
 };
 
 export const addTask = task => ({
@@ -93,3 +94,13 @@ export const assignMemberToTaskRemote = (task, member) => dispatch => {
         }
     );
 }
+
+export const filterByAssigneeId = (memberId) => ({
+    type: actionType.FILTER_BY_ASSIGNEE_ID,
+    memberId
+});
+
+export const removeFilterByAssigneeId = () => ({
+    type: actionType.FILTER_BY_ASSIGNEE_ID,
+    memberId: null
+});

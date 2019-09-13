@@ -47,3 +47,18 @@ export function assignMemberToTaskInTaskList(task, taskList, member) {
     return newTaskList;
 }
 
+export function filterTasksByAssigneeId(assigneeId, tasks) {
+    if (assigneeId == null) {
+        return tasks;
+    }
+    return tasks.filter((t) => {
+        for (var i = 0; i < t.assignees.length; i++) {
+            const a = t.assignees[i];
+            if (a.id === assigneeId) {
+                return true;
+            }
+        }
+        return false;
+    });
+}
+

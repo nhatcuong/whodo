@@ -45,7 +45,18 @@ function members(state=[], action) {
     }
 }
 
-const rootReducer = combineReducers({currentRoster, tasks, members});
+function filterByAssigneeId(state=null, action) {
+    switch (action.type) {
+        case actions.actionType.FILTER_BY_ASSIGNEE_ID:
+            return action.memberId;
+        default:
+            return state;
+    }
+}
+
+const rootReducer = combineReducers({
+    currentRoster, tasks, members, filterByAssigneeId
+});
 
 export default rootReducer;
 

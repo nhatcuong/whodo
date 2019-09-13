@@ -20,7 +20,7 @@ class MemberForm extends Component {
     onSubmit = event => {
         const { name } = this.state;
         this.props.dispatch(actions.publishMember({
-            rosterId: this.props.rosterId,
+            rosterId: this.props.roster.id,
             name
         }));
         this.setState({ ...INITIAL_STATE });
@@ -44,4 +44,8 @@ class MemberForm extends Component {
     }
 }
 
-export default connect()(MemberForm);
+const mapStateToProps = state => ({
+    roster: state.currentRoster
+});
+
+export default connect(mapStateToProps)(MemberForm);

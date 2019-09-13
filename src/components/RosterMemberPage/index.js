@@ -1,25 +1,33 @@
-import React, {Component} from 'react';
-
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import * as actions from 'redux/actions';
+
+import * as ROUTES from 'constants/routes';
 import MemberForm from 'components/MemberForm';
 import MemberList from 'components/MemberList';
 
-export default class RosterMemberPage extends Component {
-    componentWillMount() {
-        const { rosterId } = this.props.match.params;
-        this.props.dispatch(
+const RosterMemberPage = (props) => {
+    const { rosterId } = props.match.params;
+
+    useEffect(() => {
+        props.dispatch(
             actions.fetchCurrentRoster(rosterId)
         );
-    }
-    
-    render() {
-        const { rosterId } = this.props.match.params;
-        return (
-            <div>
-                Roster:  Id: {rosterId}
-                <MemberForm rosterId={rosterId}></MemberForm>
-                <MemberList rosterId={rosterId}></MemberList>
-            </div>
-        )
-    }
+    }, []);
+
+    return (
+        <div>
+            <div>Roster: { props.roster.title }</div>
+            <Link to={ ROUTES.pathWithRosterId(rosterId) }>Back To Tasks</Link>
+            <MemberForm></MemberForm>
+            <MemberList></MemberList>
+        </div>
+    )
 }
+
+const mapStateToProps = state => ({
+    roster: state.currentRoster
+});
+
+export default connect(mapStateToProps)(RosterMemberPage);

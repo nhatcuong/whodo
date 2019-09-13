@@ -10,3 +10,14 @@ test('assignMemberToTaskInTaskList', () => {
     expect(newTaskList[0].assignees.length).toBe(2);
     expect(newTaskList[1].assignees.length).toBe(1);
 });
+
+test('filterTasksByAssigneeId', () => {
+    const task0 = {id: '0', assignees:[{id:'0'}]};
+    const task1 = {id: '1', assignees:[{id:'0'}, {id:'1'}]};
+    const newTaskList = Task.filterTasksByAssigneeId(
+        '1',
+        [task0, task1]
+    )
+    expect(newTaskList.length).toBe(1);
+    expect(newTaskList[0].id).toBe('1');
+});
