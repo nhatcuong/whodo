@@ -1,70 +1,67 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import * as Task from 'domain/task';
 import * as actions from 'redux/actions';
 
-
-class TaskItem extends Component {
-    onClickMemberButton = event => {
+const TaskItem = (props) => {
+    const onClickMemberButton = (event) => {
         const memberId = event.target.getAttribute('data-member');
-        const member = this.props.availableMembers.find(
+        const member = props.availableMembers.find(
             m => m.id === memberId
         );
         if (member) {
-            this.props.dispatch(
+            props.dispatch(
                 actions.assignMemberToTaskRemote(
-                    this.props.task,
+                    props.task,
                     member
                 )
             );
         }
     }
 
-    onClickUnassignButton = event => {
+    const onClickUnassignButton = (event) => {
         const memberId = event.target.getAttribute('data-member');
-        const member = this.props.task.assignees.find(
+        const member = props.task.assignees.find(
             m => m.id === memberId
         );
         if (member) {
-            this.props.dispatch(
+            props.dispatch(
                 actions.unassignMemberToTaskRemote(
-                    this.props.task,
+                    props.task,
                     member
                 )
             );
         }
     }
 
-    renderAssignees() {
-        return this.props.task.assignees.map(m => (
+    const renderAssignees = () => {
+        return props.task.assignees.map(m => (
             <span key={m.id}>
-                <button onClick={this.onClickUnassignButton} data-member={m.id}>X</button><span>{m.name}</span>
+                <button onClick={onClickUnassignButton} data-member={m.id}>X</button><span>{m.name}</span>
             </span>
         ));
     }
 
-    renderAssignableMembers() {
+    const renderAssignableMembers = () => {
         const assignableMembers = Task.assignableMembersToTask(
-            this.props.task,
-            this.props.availableMembers
+            props.task,
+            props.availableMembers
         );
         return assignableMembers.map(m => (
-            <button key={m.id} onClick={this.onClickMemberButton} data-member={m.id}>
+            <button key={m.id} onClick={onClickMemberButton} data-member={m.id}>
                 {m.name}
             </button>
         ));
     }
 
-    render() {
-        return (
-            <div>
-                <div>__Title: {this.props.task.title}</div>
-                {this.renderAssignees()}
-                {this.renderAssignableMembers()}
-            </div>
-        );
-    }
+    return (
+        <div>
+            <div>__Title: {props.task.title}</div>
+            {renderAssignees()}
+            {renderAssignableMembers()}
+        </div>
+    );
 }
 
 const mapStateToProps = state => ({

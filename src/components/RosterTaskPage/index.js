@@ -15,7 +15,7 @@ const RosterTaskPage = (props) => {
         props.dispatch(
             actions.fetchCurrentRoster(rosterId)
         );
-    }, []);
+    });
 
     return (
         <div>

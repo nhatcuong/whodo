@@ -1,4 +1,8 @@
 import * as Task from 'domain/task';
+import * as db from 'db';
+
+jest.mock('db');
+
 
 test('assignMemberToTaskInTaskList', () => {
     const task0 = {id: '0', assignees:['m0']};
@@ -33,3 +37,31 @@ test('filterTasksByAssigneeId', () => {
     expect(newTaskList.length).toBe(1);
     expect(newTaskList[0].id).toBe('1');
 });
+
+test('createTaskSuccess', (done) => {
+    db.insertTaskInDb.mockResolvedValue({id: '0'});
+    const mockSuccessCb = (data) => {
+        expect(data.id).toBe('0');
+        done();
+    };
+    Task.create(
+        'test_this_one',
+        '1',
+        mockSuccessCb
+    );
+});
+
+test('createTaskFailure', (done) => {
+    db.insertTaskInDb.mockRejectedValue({error: 'error!'});
+    const mockErrorCb = (error) => {
+        expect(error.error).toBe('error!');
+        done();
+    };
+    return Task.create(
+        'test_this_two',
+        '0',
+        () => 0,
+        mockErrorCb
+    );
+});
+

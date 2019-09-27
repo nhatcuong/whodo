@@ -14,7 +14,7 @@ const RosterMemberPage = (props) => {
         props.dispatch(
             actions.fetchCurrentRoster(rosterId)
         );
-    }, []);
+    });
 
     return (
         <div>
