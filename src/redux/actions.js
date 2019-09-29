@@ -10,7 +10,8 @@ export const actionType = {
     ASSIGN_MEMBER_TO_TASK: 'ASSIGN_MEMBER_TO_TASK',
     UNASSIGN_MEMBER_TO_TASK: 'UNASSIGN_MEMBER_TO_TASK',
     SET_CURRENT_ROSTER: 'SET_CURRENT_ROSTER',
-    FILTER_BY_ASSIGNEE_ID: 'FILTER_BY_ASSIGNEE_ID'
+    FILTER_BY_ASSIGNEE_ID: 'FILTER_BY_ASSIGNEE_ID',
+    DRAG_TO_REORDER: 'DRAG_TO_REORDER',
 };
 
 export const addTask = task => ({
@@ -120,4 +121,10 @@ export const filterByAssigneeId = (memberId) => ({
 export const removeFilterByAssigneeId = () => ({
     type: actionType.FILTER_BY_ASSIGNEE_ID,
     memberId: null
+});
+
+export const dragToReorder = (dragIndex, hoverIndex) => ({
+    type: actionType.DRAG_TO_REORDER,
+    dragIndex,
+    hoverIndex
 });

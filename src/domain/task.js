@@ -1,3 +1,5 @@
+import update from 'immutability-helper'
+
 import * as db from '../db';
 
 export function create(title, rosterId, successCb=null, errorCb=null) {
@@ -66,7 +68,6 @@ export function unassignMemberToTaskInTaskList(task, taskList, member) {
     return newTaskList;
 }
 
-
 export function filterTasksByAssigneeId(assigneeId, tasks) {
     if (assigneeId == null) {
         return tasks;
@@ -80,5 +81,17 @@ export function filterTasksByAssigneeId(assigneeId, tasks) {
         }
         return false;
     });
+}
+
+export function reorderTaskListLocally(taskList, dragIndex, hoverIndex) {
+    const dragTask = taskList[dragIndex]
+    var newTaskList = update(taskList, {
+        $splice: [[dragIndex, 1], [hoverIndex, 0, dragTask]],
+    });
+    newTaskList = newTaskList.map((task, i) => {
+        task.index = i;
+        return task;
+    });
+    return newTaskList;
 }
 

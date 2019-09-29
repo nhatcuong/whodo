@@ -32,6 +32,12 @@ function tasks(state=[], action) {
                 state,
                 action.member
             );
+        case actions.actionType.DRAG_TO_REORDER:
+            return Task.reorderTaskListLocally(
+                state,
+                action.dragIndex,
+                action.hoverIndex
+            );
         default:
             return state;
     }

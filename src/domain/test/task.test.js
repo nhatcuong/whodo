@@ -57,11 +57,34 @@ test('createTaskFailure', (done) => {
         expect(error.error).toBe('error!');
         done();
     };
-    return Task.create(
+    Task.create(
         'test_this_two',
         '0',
         () => 0,
         mockErrorCb
     );
+});
+
+test('reorderTaskListLocally', () => {
+    const tasks = [
+        {index: 0, title: 't0'}, 
+        {index: 1, title: 't1'}, 
+        {index: 2, title: 't2'},
+        {index: 3, title: 't3'}
+    ];
+    const newTaskList = Task.reorderTaskListLocally(tasks, 0, 2);
+    expect(newTaskList).toEqual([
+        {index: 0, title: 't1'}, 
+        {index: 1, title: 't2'}, 
+        {index: 2, title: 't0'},
+        {index: 3, title: 't3'}
+    ]);
+    const newTaskList2 = Task.reorderTaskListLocally(tasks, 2, 0);
+    expect(newTaskList2).toEqual([
+        {index: 0, title: 't2'}, 
+        {index: 1, title: 't0'}, 
+        {index: 2, title: 't1'},
+        {index: 3, title: 't3'}
+    ]);
 });
 
