@@ -7,6 +7,7 @@ import _ from 'underscore';
 import * as actions from 'redux/actions';
 import * as Task from 'domain/task';
 import TaskItem from 'components/TaskItem';
+import TaskItemDraggable from 'components/TaskItemDraggable';
 
 const TaskList = (props) => {
     const moveCard = useCallback(
@@ -28,19 +29,20 @@ const TaskList = (props) => {
 
     const tasksToShowInOrder = _.sortBy(tasksToShow, 'position');
     
+    const TaskComponent = props.filterByAssigneeId ? TaskItem : TaskItemDraggable;
+
     const tasks = tasksToShowInOrder.map(
         (task, index) => {
             return (
-                <TaskItem
+                <TaskComponent
                     key={task.id}
                     task={task}
                     position={index}
                     moveCard={moveCard}>
-                </TaskItem>
+                </TaskComponent>
             );
         }
     );
-
     return (
         <DndProvider backend={HTML5Backend}>
             <div>__Tasks</div>
