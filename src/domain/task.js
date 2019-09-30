@@ -89,9 +89,14 @@ export function reorderTaskListLocally(taskList, dragIndex, hoverIndex) {
         $splice: [[dragIndex, 1], [hoverIndex, 0, dragTask]],
     });
     newTaskList = newTaskList.map((task, i) => {
-        task.index = i;
+        task.position = i;
         return task;
     });
     return newTaskList;
 }
 
+export function persistTaskListOrder(taskList) {
+    const ids = taskList.map(t => t.id);
+    const positions = taskList.map(t => t.position);
+    db.updateTasksPosition(ids, positions);
+}

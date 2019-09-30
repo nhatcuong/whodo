@@ -128,3 +128,7 @@ export const dragToReorder = (dragIndex, hoverIndex) => ({
     dragIndex,
     hoverIndex
 });
+
+export const dropToReorder = () => (dispatch, getState) => {
+    Task.persistTaskListOrder(getState().tasks);
+};

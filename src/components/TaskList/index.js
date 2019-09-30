@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import _ from 'underscore';
 
 import * as actions from 'redux/actions';
 import * as Task from 'domain/task';
@@ -24,14 +25,16 @@ const TaskList = (props) => {
         props.filterByAssigneeId, 
         props.tasks
     );
+
+    const tasksToShowInOrder = _.sortBy(tasksToShow, 'position');
     
-    const tasks = tasksToShow.map(
+    const tasks = tasksToShowInOrder.map(
         (task, index) => {
             return (
                 <TaskItem
                     key={task.id}
                     task={task}
-                    index={index}
+                    position={index}
                     moveCard={moveCard}>
                 </TaskItem>
             );

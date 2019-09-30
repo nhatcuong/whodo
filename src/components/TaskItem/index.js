@@ -10,12 +10,15 @@ const TaskItem = (props) => {
 
     const [, drop] = useDrop({
         accept: 'card',
+        drop(item, monitor) {
+            props.dispatch(actions.dropToReorder());
+        },
         hover(item, monitor) {
             if (!ref.current) {
                 return;
             }
-            const dragIndex = item.index;
-            const hoverIndex = props.index;
+            const dragIndex = item.position;
+            const hoverIndex = props.position;
             // Don't replace items with themselves
             if (dragIndex === hoverIndex) {
                 return;
@@ -45,13 +48,13 @@ const TaskItem = (props) => {
             // Note: we're mutating the monitor item here!
             // Generally it's better to avoid mutations,
             // but it's good here for the sake of performance
-            // to avoid expensive index searches.
-            item.index = hoverIndex;
+            // to avoid expensive position searches.
+            item.position = hoverIndex;
         },
     });
 
     const [{ isDragging }, drag] = useDrag({
-        item: { type: 'card', id: props.task.id, index: props.index },
+        item: { type: 'card', id: props.task.id, position: props.position },
         collect: monitor => ({
             isDragging: monitor.isDragging(),
         }),

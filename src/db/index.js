@@ -98,3 +98,13 @@ export async function unassignMemberToTaskInDb(task, member) {
         assignees: FieldValue.arrayRemove(member)
     })
 }
+
+export async function updateTasksPosition(taskIds, positions) {
+    const firebase = new Firebase();
+    const batch = firebase.db.batch();
+    taskIds.forEach((id, i) => {
+        const taskDoc = firebase.db.collection('tasks').doc(id);
+        batch.update(taskDoc, {position: positions[i]});
+    });
+    return batch.commit();
+}

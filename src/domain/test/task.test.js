@@ -67,24 +67,40 @@ test('createTaskFailure', (done) => {
 
 test('reorderTaskListLocally', () => {
     const tasks = [
-        {index: 0, title: 't0'}, 
-        {index: 1, title: 't1'}, 
-        {index: 2, title: 't2'},
-        {index: 3, title: 't3'}
+        {position: 0, title: 't0'}, 
+        {position: 1, title: 't1'}, 
+        {position: 2, title: 't2'},
+        {position: 3, title: 't3'}
     ];
     const newTaskList = Task.reorderTaskListLocally(tasks, 0, 2);
     expect(newTaskList).toEqual([
-        {index: 0, title: 't1'}, 
-        {index: 1, title: 't2'}, 
-        {index: 2, title: 't0'},
-        {index: 3, title: 't3'}
+        {position: 0, title: 't1'}, 
+        {position: 1, title: 't2'}, 
+        {position: 2, title: 't0'},
+        {position: 3, title: 't3'}
     ]);
     const newTaskList2 = Task.reorderTaskListLocally(tasks, 2, 0);
     expect(newTaskList2).toEqual([
-        {index: 0, title: 't2'}, 
-        {index: 1, title: 't0'}, 
-        {index: 2, title: 't1'},
-        {index: 3, title: 't3'}
+        {position: 0, title: 't2'}, 
+        {position: 1, title: 't0'}, 
+        {position: 2, title: 't1'},
+        {position: 3, title: 't3'}
     ]);
+});
+
+test('persistTaskListOrder', () => {
+    // db.updateTasksPosition().mockResolvedValue(undefined);
+    const taskList = [
+        {position: 0, title: 't0', id: '0'}, 
+        {position: 1, title: 't1', id: '1'}, 
+        {position: 2, title: 't2', id: '2'},
+        {position: 3, title: 't3', id: '3'}
+    ]
+    Task.persistTaskListOrder(taskList);
+    expect(db.updateTasksPosition).toHaveBeenCalledWith(
+        ['0', '1', '2', '3'],
+        [0, 1, 2, 3]
+    );
+
 });
 
